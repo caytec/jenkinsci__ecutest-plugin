@@ -14,6 +14,7 @@ import org.jvnet.hudson.test.WithoutJenkins;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -50,8 +51,8 @@ public class TestPackageScannerIT extends IntegrationTestBase {
     @Test
     public void testScanPackages() throws Exception {
         final File testFolder = folder.newFolder();
-        File.createTempFile("test", ".pkg", testFolder);
-        File.createTempFile("test", ".pkg", testFolder);
+        Files.createTempFile(testFolder.toPath(), "test", ".pkg").toFile();
+        Files.createTempFile(testFolder.toPath(), "test", ".pkg").toFile();
         final Launcher launcher = jenkins.createOnlineSlave().createLauncher(jenkins.createTaskListener());
         final TestPackageScanner scanner = new TestPackageScanner(testFolder.getAbsolutePath(), false, launcher);
         assertEquals("Two packages should be found", 2, scanner.scanTestFiles().size());

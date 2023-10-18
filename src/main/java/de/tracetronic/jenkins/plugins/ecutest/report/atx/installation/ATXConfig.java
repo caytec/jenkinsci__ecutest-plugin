@@ -18,6 +18,7 @@ import org.xml.sax.SAXException;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -171,6 +172,26 @@ public class ATXConfig extends AbstractDescribableImpl<ATXConfig> implements Clo
     private List<ATXSetting<?>> parseDefaultConfig() {
         Document doc = null;
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        String FEATURE = null;
+        try {
+            FEATURE = "http://xml.org/sax/features/external-parameter-entities";
+            factory.setFeature(FEATURE, false);
+
+            FEATURE = "http://apache.org/xml/features/nonvalidating/load-external-dtd";
+            factory.setFeature(FEATURE, false);
+
+            FEATURE = "http://xml.org/sax/features/external-general-entities";
+            factory.setFeature(FEATURE, false);
+
+            factory.setXIncludeAware(false);
+            factory.setExpandEntityReferences(false);
+
+            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+
+        } catch (ParserConfigurationException e) {
+            throw new IllegalStateException("The feature '"
+                + FEATURE + "' is not supported by your XML processor.", e);
+        }
         try (InputStream configFile = ATXConfig.class.getResourceAsStream("config.xml")) {
             final DocumentBuilder builder = factory.newDocumentBuilder();
             doc = builder.parse(configFile);

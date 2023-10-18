@@ -15,6 +15,7 @@ import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.nio.file.Files;
 
 import static org.junit.Assert.assertEquals;
 
@@ -59,7 +60,7 @@ public class ETComPropertyTest {
 
     @Test
     public void testSerialization() throws IOException, ClassNotFoundException {
-        final File tempFile = File.createTempFile("test", ".ser");
+        final File tempFile = Files.createTempFile("test", ".ser").toFile();
 
         // Serialize object to file
         final ETComProperty prop = ETComProperty.getInstance();
